@@ -1,0 +1,81 @@
+st REGION_COLOR = {
+  'Pacífico': '#2B4570',
+  'Norte':    '#6B8F71',
+  'Centro':   '#E8892B',
+  'Caribe':   '#A6437B',
+};
+
+const state = {
+  places: [],
+  activeCityId: null,
+  activePlaceId: null,
+  placingMode: false,
+  pendingLatLng: null,
+};
+
+let map, cityMarkers = {}, placeMarkers = {};
+let nextPlaceId = 1;
+
+function initData(){
+  state.places = LUGARES_SEMILLA.map(p => ({
+    id: 'p' + (nextPlaceId++),
+    ...p,
+    reviews: [],
+  }));
+  
+  seedReview('leon', 'Mercado Municipal de León', 'Ana', 5, 'Excelente variedad de artesanías y muy buena atención.');
+  seedReview('masaya', 'Mercado de Artesanías de Masaya', 'Carlos', 4, 'El lugar ideal para comprar recuerdos, un poco concurrido los fines de semana.');
+  seedReview('granada', 'Calle La Calzada', 'Marielos', 5, 'Ambiente increíble por la noche, música en vivo y buena comida.');
+}
+function seedReview(cityId, placeName, autor, rating, texto){
+  const lugar = state.places.find(p => p.ciudadId === cityId && p.nombre === placeName);
+  if(lugar) lugar.reviews.push({ autor, rating, texto, fecha: new Date().toISOString() });
+}
+
+function promedio(lugar){
+  if(!lugar.reviews.length) return null;
+  const s = lugar.reviews.reduce((a,r)=>a+r.rating,0);
+  return s / lugar.reviews.length;
+}
+function estrellas(valor){
+  if(valor == null) return '<span class="empty-note">Sin reseñas aún</span>';
+  const llenas = Math.round(valor);
+  return '★'.repeat(llenas) + '☆'.repeat(5-llenas) + ` <span style="color:var(--ink-soft);font-weight:400">(${valor.toFixed(1)})</span>`;
+}
+function ciudadPorId(id){ return CIUDADES.find(c => c.id === id); }
+function lugarPorId(id){ return state.places.find(p => p.id === id); }
+function lugaresDeCiudad(id){ return state.places.filter(p => p.ciudadId === id); }
+function fechaCorta(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-NI', { day:'2-digit', month:'short', year:'numeric' });
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function initMap(){
+  map = L.map('map', { zoomControl:false, minZoom:7 }).setView([12.6, -85.4], 7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+  }).addTo(map);
+  L.control.zoom({ position:'bottomleft' }).addTo(map);
+
+  CIUDADES.forEach(ciudad => {
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="pin pin--city" style="--pin-color:${REGION_COLOR[ciudad.region]}"><div class="pin__body"><span class="pin__icon">🏙️</span></div></div>`,
+      iconSize: [34,42], iconAnchor:[17,40],
+    });
+    const marker = L.marker([ciudad.lat, ciudad.lng], { icon }).addTo(map);
+    marker.on('click', () => seleccionarCiudad(ciudad.id));
+    marker.bindTooltip(ciudad.nombre, { direction:'top', offset:[0,-30] });
+    cityMarkers[ciudad.id] = marker;
+  });
+
+  renderPlaceMarkers();
+
+  map.on('click', (e) => {
+    if(state.placingMode) elegirUbicacion(e.latlng);
+  });
+}
