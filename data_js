@@ -1,0 +1,120 @@
+const CATEGORIAS = {
+  artesania:   { label: 'Artesanía',    color: '#E8892B', icono: '🏺' },
+  gastronomia: { label: 'Gastronomía',  color: '#B23A2E', icono: '🍲' },
+  musica:      { label: 'Música',       color: '#2B4570', icono: '🎶' },
+  arte:        { label: 'Arte Popular', color: '#6B8F71', icono: '🎨' },
+  patrimonio:  { label: 'Patrimonio',   color: '#7A5230', icono: '🏛️' },
+  diseno:      { label: 'Diseño',       color: '#A6437B', icono: '✂️' },
+};
+
+const CIUDADES = [
+  {
+    id: 'leon',
+    nombre: 'León',
+    region: 'Pacífico',
+    lat: 12.4340, lng: -86.8780,
+    ambito: 'Patrimonio y Arte Popular',
+    descripcion: 'Ciudad universitaria y cuna del muralismo y la poesía nicaragüense. Su catedral es Patrimonio de la Humanidad y sus calles guardan una fuerte tradición literaria y artística.',
+  },
+  {
+    id: 'granada',
+    nombre: 'Granada',
+    region: 'Pacífico',
+    lat: 11.9297, lng: -85.9560,
+    ambito: 'Patrimonio y Diseño',
+    descripcion: 'Arquitectura colonial colorida a orillas del lago Cocibolca. Referente de turismo cultural, artesanía y restauración de casonas históricas.',
+  },
+  {
+    id: 'masaya',
+    nombre: 'Masaya',
+    region: 'Pacífico',
+    lat: 11.9744, lng: -86.0940,
+    ambito: 'Artesanía',
+    descripcion: 'Considerada cuna de la artesanía nicaragüense. Su mercado y las mascaradas tradicionales mantienen viva la herencia indígena de la zona.',
+  },
+  {
+    id: 'san-juan-de-oriente',
+    nombre: 'San Juan de Oriente',
+    region: 'Pacífico',
+    lat: 11.9319, lng: -85.9836,
+    ambito: 'Artesanía',
+    descripcion: 'Pueblo alfarero de raíz chorotega, reconocido por su cerámica trabajada a mano y transmitida de generación en generación.',
+  },
+  {
+    id: 'esteli',
+    nombre: 'Estelí',
+    region: 'Norte',
+    lat: 13.0908, lng: -86.3535,
+    ambito: 'Arte Popular',
+    descripcion: 'Conocida por sus murales urbanos y su escena de arte contemporáneo, además de una activa producción musical en la región norte.',
+  },
+  {
+    id: 'matagalpa',
+    nombre: 'Matagalpa',
+    region: 'Norte',
+    lat: 12.9251, lng: -85.9169,
+    ambito: 'Artesanía y Gastronomía',
+    descripcion: 'Ciudad de montaña ligada a la cultura del café, con artesanía y tradiciones campesinas que marcan su identidad creativa.',
+  },
+  {
+    id: 'juigalpa',
+    nombre: 'Juigalpa',
+    region: 'Centro',
+    lat: 12.1000, lng: -85.3667,
+    ambito: 'Patrimonio',
+    descripcion: 'Guarda uno de los conjuntos de petroglifos y estatuaria precolombina más importantes del país, junto a una fuerte tradición ganadera y folclórica.',
+  },
+  {
+    id: 'managua',
+    nombre: 'Managua',
+    region: 'Pacífico',
+    lat: 12.1150, lng: -86.2362,
+    ambito: 'Diseño, Patrimonio y Arte Popular',
+    descripcion: 'Capital del país. Reúne diseñadores, espacios históricos y una escena de arte popular que representa a los barrios de todo el municipio.',
+  },
+  {
+    id: 'nagarote',
+    nombre: 'Nagarote',
+    region: 'Pacífico',
+    lat: 12.2758, lng: -86.5647,
+    ambito: 'Arte Popular',
+    descripcion: 'Tierra del Güegüense, patrimonio cultural inmaterial de la humanidad, y de una fuerte tradición artesanal y folclórica.',
+  },
+  {
+    id: 'bluefields',
+    nombre: 'Bluefields',
+    region: 'Caribe',
+    lat: 12.0136, lng: -83.7627,
+    ambito: 'Música y Arte Popular',
+    descripcion: 'Ciudad caribeña multicultural donde conviven los pueblos miskitu, mayangna, rama, ulwa y las comunidades afrodescendientes, creole y garífuna. Cuna del Palo de Mayo.',
+  },
+];
+
+const LUGARES_SEMILLA = [
+  { ciudadId: 'leon', nombre: 'Mercado Municipal de León', categoria: 'artesania', lat: 12.4342, lng: -86.8788, descripcion: 'Punto de venta de artesanías, cuero y dulces tradicionales.' },
+  { ciudadId: 'leon', nombre: 'Casa Museo Rubén Darío', categoria: 'patrimonio', lat: 12.4351, lng: -86.8776, descripcion: 'Casa donde vivió el poeta, hoy convertida en museo.' },
+
+  { ciudadId: 'granada', nombre: 'Calle La Calzada', categoria: 'diseno', lat: 11.9280, lng: -85.9535, descripcion: 'Corredor de restaurantes, galerías y talleres de diseño.' },
+  { ciudadId: 'granada', nombre: 'Mercado Municipal de Granada', categoria: 'artesania', lat: 11.9315, lng: -85.9572, descripcion: 'Artesanías en madera, cuero y textiles.' },
+
+  { ciudadId: 'masaya', nombre: 'Mercado de Artesanías de Masaya', categoria: 'artesania', lat: 11.9745, lng: -86.0965, descripcion: 'El mercado artesanal más reconocido del país.' },
+  { ciudadId: 'masaya', nombre: 'Barrio Monimbó', categoria: 'arte', lat: 11.9680, lng: -86.0975, descripcion: 'Cuna de las mascaradas y la tradición indígena local.' },
+
+  { ciudadId: 'san-juan-de-oriente', nombre: 'Talleres de Cerámica', categoria: 'artesania', lat: 11.9322, lng: -85.9822, descripcion: 'Familias alfareras que trabajan la cerámica chorotega.' },
+
+  { ciudadId: 'esteli', nombre: 'Galería de Héroes y Mártires', categoria: 'arte', lat: 13.0925, lng: -86.3540, descripcion: 'Murales históricos en el centro de la ciudad.' },
+  { ciudadId: 'esteli', nombre: 'Fábricas de Puros', categoria: 'artesania', lat: 13.0890, lng: -86.3510, descripcion: 'Tradición tabacalera artesanal de la región.' },
+
+  { ciudadId: 'matagalpa', nombre: 'Catedral de San Pedro', categoria: 'patrimonio', lat: 12.9255, lng: -85.9175, descripcion: 'Punto de referencia del centro histórico.' },
+  { ciudadId: 'matagalpa', nombre: 'Ruta del Café', categoria: 'gastronomia', lat: 12.9200, lng: -85.9100, descripcion: 'Fincas y beneficios de café en las afueras de la ciudad.' },
+
+  { ciudadId: 'juigalpa', nombre: 'Museo Arqueológico Gregorio Aguilar Barea', categoria: 'patrimonio', lat: 12.1005, lng: -85.3670, descripcion: 'Colección de estatuaria precolombina de la región de Chontales.' },
+
+  { ciudadId: 'managua', nombre: 'Plaza de la Revolución', categoria: 'patrimonio', lat: 12.1470, lng: -86.2680, descripcion: 'Centro histórico frente al lago Xolotlán.' },
+  { ciudadId: 'managua', nombre: 'Malecón de Managua', categoria: 'arte', lat: 12.1455, lng: -86.2760, descripcion: 'Espacio cultural y recreativo junto al lago.' },
+
+  { ciudadId: 'nagarote', nombre: 'Parque Central de Nagarote', categoria: 'arte', lat: 12.2755, lng: -86.5650, descripcion: 'Sede de las fiestas patronales y presentaciones del Güegüense.' },
+
+  { ciudadId: 'bluefields', nombre: 'Barrio Old Bank', categoria: 'musica', lat: 12.0125, lng: -83.7635, descripcion: 'Uno de los barrios con más tradición musical de la ciudad.' },
+  { ciudadId: 'bluefields', nombre: 'Malecón de Bluefields', categoria: 'gastronomia', lat: 12.0080, lng: -83.7610, descripcion: 'Comida costeña frente a la bahía.' },
+];
