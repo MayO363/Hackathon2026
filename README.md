@@ -3,15 +3,6 @@
 El objetivo de esta aplicacion es ayudar a facilitar optimizar y automatizar uno de los mas grandes
 problemas que tienen los turistas hoy en dia en cual es no saber en donde estan, la mayoria no puede contar con un guia turistico es por eso que tras tus huellas llega al rescate, nuestra aplicacion incluye un mapa interactivo donde el usuario podra ubicr distintas zonas comerciales famosas y concurridas del pais asi podra tener variedad a la hora de elegir donde explorar, ademas agrega un sistema de afiliacion entre local y usuario para que puedan seguir en contacto y un sistema de reseñas a los locales afiliados a nuestra aplicacion. 
 
-# Cómo usarla
-
-1. Descomprime la carpeta `ciudades-creativas`.
-2. Abre `index.html` con doble clic en cualquier navegador (Chrome, Firefox,
-   Safari, Edge) — funciona igual en computadora y en celular.
-3. Para publicarla en internet, súbela tal cual a cualquier hosting estático:
-   GitHub Pages, Netlify, Vercel o el hosting que prefieras. No requiere
-   servidor, base de datos ni claves de API.
-
 ## Estructura del proyecto
 
 ```
