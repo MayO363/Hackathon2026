@@ -7,10 +7,26 @@ problemas que tienen los turistas hoy en dia en cual es no saber en donde estan,
 
 ```
 ciudades-creativas/
-├── index.html        página principal
-├── css/style.css      estilos (paleta, tipografía, responsive)
-├── js/data.js         las 10 ciudades y lugares de ejemplo
-└── js/app.js          lógica del mapa, panel, formularios y reseñas
+├── index.html                       Único punto de entrada (SPA sin router)
+│
+├── css/
+│   └── style.css                    Paleta, tipografía y estilos responsive (:root { --primary, --accent, ... })
+│
+├── js/                               Scripts globales, cargados en este orden (sin bundler / sin módulos ES):
+│   ├── supabaseConfig.js            1. Conexión a tu proyecto de Supabase (SUPABASE_URL, SUPABASE_ANON_KEY)
+│   ├── auth.js                      2. Registro, inicio y cierre de sesión (correo/contraseña + Google)
+│   ├── data.js                      3. Catálogo fijo: las 10 ciudades y las categorías creativas
+│   ├── geo.js                       4. Ubicación del usuario en tiempo real y cálculo de cercanía
+│   ├── eventos.js                   5. Eventos culturales: marcadores y notificaciones de proximidad
+│   └── app.js                       6. Orquestador principal: mapa, panel, formularios, lugares y reseñas
+│
+├── sql/
+│   ├── schema.sql                   Tablas, seguridad (RLS) y datos semilla — correr una sola vez
+│   ├── migracion_eventos.sql        Migración: agrega solo la tabla de eventos (si el proyecto ya existía)
+│   └── migracion_login_google.sql   Migración: agrega solo el ajuste para reconocer nombres de Google
+│
+└── docs/
+    └── diagrama-base-de-datos.md    Diagrama ERD (Mermaid, se ve directo en GitHub)
 ```
 
 ## Funcionalidad incluida
