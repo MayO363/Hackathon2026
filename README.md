@@ -60,7 +60,7 @@ protegidas por políticas de Row Level Security (RLS).
 ## 2. Arquitectura general
 ```mermaid
 flowchart TB
-    subgraph Cliente["🌐 NAVEGADOR (cliente)"]
+    subgraph Cliente[" NAVEGADOR (cliente)"]
         direction TB
         HTML["index.html"]
         CSS["css/style.css<br/>(presentación)"]
