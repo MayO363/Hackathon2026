@@ -42,44 +42,44 @@ llamadas del SDK `@supabase/supabase-js` contra las tablas de Postgres,
 protegidas por políticas de Row Level Security (RLS).
 
 ## 2. Arquitectura general
-┌─────────────────────────────────────────────────────────────┐
-│                      NAVEGADOR (cliente)                     │
-│                                                               │
-│  index.html                                                  │
-│   ├─ css/style.css            (presentación)                 │
-│   └─ js/  (scripts cargados en orden, sin módulos ES / sin    │
-│            bundler — todo vive en el objeto global window)   │
-│       1. supabaseConfig.js  → crea supabaseClient             │
-│       2. auth.js            → sesión, login/registro          │
-│       3. data.js            → catálogo estático (ciudades,    │
-│                                categorías) embebido en JS      │
-│       4. geo.js             → geolocalización nativa          │
-│       5. eventos.js         → eventos culturales + notifs     │
-│       6. app.js             → orquestador: mapa, panel, CRUD  │
-│                                de lugares/reseñas              │
-│                                                               │
-│  Librerías de terceros (vía CDN, sin instalación):            │
-│   • Leaflet 1.9.4        → mapa interactivo (tiles OSM)        │
-│   • @supabase/supabase-js@2 → cliente REST/Realtime/Auth       │
-└───────────────────────────┬───────────────────────────────────┘
-                            │ HTTPS (REST autogenerado + Auth)
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                         SUPABASE (BaaS)                      │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────────┐ │
-│  │  Auth          │  │  PostgREST    │  │  Postgres          │ │
-│  │  (auth.users,  │  │  (API REST    │  │  (tablas públicas: │ │
-│  │  email+pass,   │  │  autogenerada │  │  perfiles,         │ │
-│  │  OAuth Google) │  │  sobre las    │  │  categorias,       │ │
-│  │                │  │  tablas)      │  │  ciudades,         │ │
-│  └───────┬────────┘  └───────┬───────┘  │  lugares, resenas, │ │
-│          │                   │          │  eventos)          │ │
-│          │   trigger al      │          │  + Row Level       │ │
-│          └──registrar user──▶│          │    Security (RLS)  │ │
-│                               ▼          └───────────────────┘ │
-│                      políticas RLS deciden qué puede           │
-│                      leer/escribir cada request                │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Cliente["🌐 NAVEGADOR (cliente)"]
+        direction TB
+        HTML["index.html"]
+        CSS["css/style.css<br/>(presentación)"]
+        subgraph Scripts["js/ — scripts globales, sin bundler, cargados en orden"]
+            direction TB
+            S1["1. supabaseConfig.js<br/>crea supabaseClient"]
+            S2["2. auth.js<br/>sesión, login/registro"]
+            S3["3. data.js<br/>catálogo estático (ciudades, categorías)"]
+            S4["4. geo.js<br/>geolocalización nativa"]
+            S5["5. eventos.js<br/>eventos culturales + notifs"]
+            S6["6. app.js<br/>orquestador: mapa, panel, CRUD"]
+            S1 --> S2 --> S3 --> S4 --> S5 --> S6
+        end
+        subgraph Libs["Librerías vía CDN (sin instalación)"]
+            L1["Leaflet 1.9.4<br/>mapa interactivo, tiles OSM"]
+            L2["@supabase/supabase-js@2<br/>cliente REST / Auth"]
+        end
+        HTML --> Scripts
+        HTML --> CSS
+        Scripts --> Libs
+    end
+
+    subgraph Supabase["☁️ SUPABASE (BaaS)"]
+        direction TB
+        Auth["Auth<br/>(auth.users, email+pass, OAuth Google)"]
+        REST["PostgREST<br/>(API REST autogenerada sobre las tablas)"]
+        DB["Postgres<br/>perfiles · categorias · ciudades<br/>lugares · resenas · eventos"]
+        RLS["Row Level Security (RLS)<br/>decide qué puede leer/escribir cada request"]
+        Auth -- "trigger al registrar user" --> DB
+        REST --> RLS
+        RLS --> DB
+    end
+
+    Cliente -- "HTTPS (REST autogenerado + Auth)" --> Supabase
+```
 
 ## 3. Dependencias
 
